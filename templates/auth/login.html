@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+
+
+<div class="auth-card p-5">
+
+    <h3 class="fw-bold text-center mb-4 text-white">Login</h3>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label text-secondary">Username</label>
+            <input type="text" name="username" class="form-control bg-dark text-white border-0" required>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label text-secondary">Password</label>
+            <input type="password" name="password" class="form-control bg-dark text-white border-0" required>
+        </div>
+
+        <button class="btn btn-info w-100 py-2">Login</button>
+    </form>
+
+    <p class="text-center text-secondary mt-4 small">
+        Don’t have an account?
+        <a href="{% url 'register' %}" class="text-info">Register</a>
+    </p>
+
+</div>
+
+
+</div>
+
+<style>
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    background: #1e293b;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+</style>
+
+{% endblock %}

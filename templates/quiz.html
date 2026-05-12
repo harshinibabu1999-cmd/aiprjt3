@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h4 class="fw-bold m-0 text-white">
+                {{ course.title }}:
+                <span class="text-info">{{ quiz.difficulty|title }} Exam</span>
+            </h4>
+            <p class="text-secondary small m-0">
+                Answer all questions to complete your assessment.
+            </p>
+        </div>
+        <div class="badge bg-dark border px-3 py-2 rounded-pill">
+            {{ quiz.questions|length }} MCQs
+        </div>
+    </div>
+
+    <!-- FORM -->
+    <form method="POST" id="quizForm">
+        {% csrf_token %}
+
+        {% for q in quiz.questions %}
+        <div class="card question-card p-4 p-md-5 mb-4"
+             id="q-{{ forloop.counter0 }}"
+             style="{% if not forloop.first %}display:none;{% endif %}">
+
+            <!-- TOP BAR -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <small class="text-secondary">
+                    Question {{ forloop.counter }} of {{ quiz.questions|length }}
+                </small>
+
+                <div class="progress" style="width: 120px; height: 6px;">
+                    <div class="progress-bar bg-info"
+                         style="width: {% widthratio forloop.counter quiz.questions|length 100 %}%">
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTION -->
+            <h5 class="fw-semibold mb-4 text-white question-text">
+                {{ q.question }}
+            </h5>
+
+            <!-- OPTIONS -->
+            <div class="options-group">
+                {% for option in q.options %}
+                <div class="mb-3">
+                    <input type="radio"
+                           class="btn-check"
+                           name="q_{{ forloop.parentloop.counter0 }}"
+                           id="opt_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"
+                           value="{{ option }}">
+
+                    <label class="option-label w-100 p-3 d-flex align-items-center"
+                           for="opt_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}">
+
+                        <div class="option-indicator me-3">
+                            {% if forloop.counter == 1 %}A
+                            {% elif forloop.counter == 2 %}B
+                            {% elif forloop.counter == 3 %}C
+                            {% else %}D{% endif %}
+                        </div>
+
+                        <span>{{ option }}</span>
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- NAV BUTTONS -->
+            <div class="mt-4 d-flex justify-content-between">
+
+                {% if not forloop.first %}
+                <button type="button"
+                        class="btn btn-outline-light px-4"
+                        onclick="showQuestion({{ forloop.counter0|add:'-1' }})">
+                    ← Previous
+                </button>
+                {% else %}
+                <div></div>
+                {% endif %}
+
+                {% if not forloop.last %}
+                <button type="button"
+                        id="next-btn-{{ forloop.counter0 }}"
+                        class="btn btn-primary px-4"
+                        onclick="showQuestion({{ forloop.counter0|add:'1' }})"
+                        disabled>
+                    Next →
+                </button>
+                {% else %}
+                <button type="submit"
+                        id="submit-btn"
+                        class="btn btn-success px-4 fw-bold"
+                        disabled>
+                    Submit ✔
+                </button>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </form>
+</div>
+
+
+</div>
+
+<!-- SCRIPT -->
+
+<script>
+function showQuestion(index) {
+    document.querySelectorAll('.question-card').forEach(card => {
+        card.style.display = 'none';
+    });
+
+    const current = document.getElementById('q-' + index);
+    current.style.display = 'block';
+}
+
+// Enable buttons only after selecting answer
+document.querySelectorAll('.btn-check').forEach(input => {
+    input.addEventListener('change', function () {
+        const qIndex = this.name.split('_')[1];
+
+        const nextBtn = document.getElementById('next-btn-' + qIndex);
+        if (nextBtn) nextBtn.disabled = false;
+
+        const submitBtn = document.getElementById('submit-btn');
+        if (submitBtn && qIndex == {{ quiz.questions|length|add:'-1' }}) {
+            submitBtn.disabled = false;
+        }
+    });
+});
+</script>
+
+<!-- STYLE -->
+
+<style>
+
+/* QUESTION CARD */
+.question-card {
+    background: #1e293b;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* QUESTION TEXT (SMALL + CLEAN) */
+.question-text {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #e2e8f0;
+}
+
+/* OPTIONS */
+.option-label {
+    border-radius: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.option-label:hover {
+    background: rgba(56,189,248,0.08);
+}
+
+/* OPTION LETTER */
+.option-indicator {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* SELECTED OPTION */
+.btn-check:checked + .option-label {
+    border-color: #38bdf8;
+    background: rgba(56,189,248,0.15);
+    box-shadow: 0 0 0 2px rgba(56,189,248,0.2);
+}
+
+.btn-check:checked + .option-label .option-indicator {
+    background: #38bdf8;
+    color: white;
+}
+
+/* BUTTONS */
+.btn-primary, .btn-success, .btn-outline-light {
+    border-radius: 10px;
+}
+
+</style>
+
+{% endblock %}

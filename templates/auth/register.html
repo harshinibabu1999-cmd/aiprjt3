@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+
+    <div class="auth-card p-5 shadow-lg" style="width: 400px; border-radius: 15px; background-color: #1e1e2f;">
+
+        <h3 class="fw-bold text-center mb-4 text-white">Create Account</h3>
+
+        <!-- 🔥 SHOW MESSAGES -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- 🔥 SHOW FORM ERRORS -->
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label text-secondary">Username</label>
+                <input type="text" name="username" class="form-control bg-dark text-white border-0" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-secondary">Email</label>
+                <input type="email" name="email" class="form-control bg-dark text-white border-0">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-secondary">Password</label>
+                <input type="password" name="password1" class="form-control bg-dark text-white border-0" required>
+                <small class="text-muted">
+                    Must be at least 8 characters and not too common.
+                </small>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label text-secondary">Confirm Password</label>
+                <input type="password" name="password2" class="form-control bg-dark text-white border-0" required>
+            </div>
+
+            <button class="btn btn-info w-100 py-2 fw-bold">Register</button>
+        </form>
+
+        <p class="text-center text-secondary mt-4 small">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-info fw-bold">Login</a>
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

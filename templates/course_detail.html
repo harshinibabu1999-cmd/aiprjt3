@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row fade-in g-0 mt-2">
+    <!-- Sidebar Navigation -->
+    <div class="col-md-3 sidebar shadow-lg">
+        <div class="px-3 mb-4">
+            <h6 class="fw-bold text-secondary mb-3 small tracking-widest text-uppercase">Course Curriculum</h6>
+            <div class="progress mb-3" style="height: 6px; background: rgba(255,255,255,0.05);">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ progress_percent }}%"></div>
+            </div>
+            <div class="small text-secondary">{{ current_chapter_idx|add:1 }} of {{ total_chapters }} Chapters Complete</div>
+        </div>
+
+        <div class="chapter-list px-2 overflow-auto">
+            {% for ch in course.chapters %}
+            <a href="?chapter={{ forloop.counter0 }}"
+               class="chapter-link {% if current_chapter_idx == forloop.counter0 %}active{% endif %}">
+                <div class="d-flex align-items-center">
+                    <div class="chapter-num me-3 bg-dark bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 28px; height: 28px; font-size: 0.75rem; flex-shrink: 0;">
+                        {{ forloop.counter }}
+                    </div>
+                    <div class="text-truncate">{{ ch.title }}</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Main Content Reader -->
+    <div class="col-md-9 pb-5">
+        <div class="reader-container">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-end mb-5 border-bottom pb-4 border-secondary border-opacity-10">
+                <div>
+                    <h5 class="text-primary fw-semibold mb-2">Chapter {{ current_chapter_idx|add:1 }}</h5>
+                    <h1 class="fw-bold m-0" style="letter-spacing: -1px;">{{ chapter.title }}</h1>
+                </div>
+                <div class="d-flex gap-3">
+                    {% if course.pdf_file %}
+                    <a href="{{ course.pdf_file.url }}" class="btn btn-outline-secondary d-flex align-items-center" download>
+                        <i class="ri-download-2-line me-2"></i> Download PDF
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Content Body -->
+            <div class="content-body fade-in" style="font-size: 1rem; line-height: 1.9; letter-spacing: 0.01em;">
+                {{ chapter.content|linebreaks }}
+            </div>
+
+            <!-- Difficulty Selection Modal -->
+            <div class="modal fade" id="quizModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content glass-panel border-secondary border-opacity-10">
+                        <div class="modal-header border-0 pb-0">
+                            <h5 class="modal-title fw-bold">Select Difficulty Level</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <p class="text-secondary small mb-4">Choose the complexity of the AI-generated assessment based on this course content.</p>
+                            <div class="d-grid gap-3">
+                                <a href="{% url 'take_quiz' course.id %}?difficulty=easy"
+                                   class="btn btn-outline-secondary p-3 text-start d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold text-success">Easy</div>
+                                        <div class="small text-secondary">Definitions & Key Concepts</div>
+                                    </div>
+                                    <i class="ri-leaf-line h4 m-0 text-success"></i>
+                                </a>
+                                <a href="{% url 'take_quiz' course.id %}?difficulty=medium"
+                                   class="btn btn-outline-secondary p-3 text-start d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold text-primary">Medium</div>
+                                        <div class="small text-secondary">Understanding & Application</div>
+                                    </div>
+                                    <i class="ri-medal-2-line h4 m-0 text-primary"></i>
+                                </a>
+                                <a href="{% url 'take_quiz' course.id %}?difficulty=hard"
+                                   class="btn btn-outline-secondary p-3 text-start d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold text-danger">Hard</div>
+                                        <div class="small text-secondary">Advanced Technical Concepts</div>
+                                    </div>
+                                    <i class="ri-fire-line h4 m-0 text-danger"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chapter Navigation -->
+            <div class="mt-5 pt-5 d-flex justify-content-between align-items-center border-top border-secondary border-opacity-10">
+                {% if current_chapter_idx > 0 %}
+                    <a href="?chapter={{ current_chapter_idx|add:'-1' }}" class="btn btn-outline-secondary px-4">
+                        <i class="ri-arrow-left-s-line me-1"></i> Previous
+                    </a>
+                {% else %}
+                    <div></div>
+                {% endif %}
+
+                <div class="text-secondary small">Chapter {{ current_chapter_idx|add:1 }} of {{ total_chapters }}</div>
+
+                {% if current_chapter_idx < total_chapters|add:'-1' %}
+                    <a href="?chapter={{ current_chapter_idx|add:'1' }}" class="btn btn-primary px-4">
+                        Next Chapter <i class="ri-arrow-right-s-line ms-1"></i>
+                    </a>
+                {% else %}
+                    <button type="button" class="btn btn-success px-4 bg-success border-0" data-bs-toggle="modal" data-bs-target="#quizModal">
+                        Attend Quiz <i class="ri-questionnaire-line ms-1"></i>
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.tracking-widest { letter-spacing: 0.15em; }
+.content-body p { margin-bottom: 1.2rem; }
+</style>
+{% endblock %}
