@@ -2,16 +2,16 @@
 
 {% block content %}
 
-<div class="container py-4">
+<div class="py-4">
 
 
 <div class="row g-4 align-items-stretch">
 
-    <!-- LEFT: UPLOAD PANEL -->
+  
     <div class="col-lg-{% if resume and resume.resume_file %}5{% else %}8 mx-auto{% endif %}">
         <div class="upload-card h-100 p-4 p-md-5 text-center">
 
-            <!-- ICON -->
+           
             <div class="mb-4">
                 <div class="icon-wrap mx-auto mb-3">
                     <i class="ri-upload-cloud-2-line"></i>
@@ -27,7 +27,7 @@
                 and personalized career recommendations.
             </p>
 
-            <!-- FORM -->
+          
             <form method="POST" enctype="multipart/form-data" id="uploadForm">
                 {% csrf_token %}
 
@@ -36,10 +36,8 @@
                        id="resumeInput"
                        class="d-none"
                        accept=".pdf"
-                       required
                        onchange="updateFileName()">
 
-                <!-- DROPZONE -->
                 <label for="resumeInput" class="upload-box mb-4">
                     <i class="ri-file-pdf-2-line mb-2"></i>
                     <div id="fileName" class="small text-secondary">
@@ -47,10 +45,9 @@
                     </div>
                 </label>
 
-                <!-- BUTTON -->
                 <button type="submit"
                         class="btn btn-info w-100 py-2 fw-bold"
-                        onclick="showLoading()">
+                        onclick="showLoading(event)">
 
                     {% if resume and resume.resume_file %}
                     Update & Reanalyze
@@ -61,7 +58,7 @@
 
             </form>
 
-            <!-- LOADING -->
+           
             <div id="loading" class="mt-4 d-none">
                 <div class="loader mx-auto mb-3"></div>
                 <small class="text-secondary">
@@ -73,12 +70,11 @@
     </div>
 
     {% if resume and resume.resume_file %}
-    <!-- RIGHT: RESULTS -->
+  
     <div class="col-lg-7">
 
         <div class="row g-4">
 
-            <!-- DOMAIN -->
             <div class="col-12">
                 <div class="result-card p-4">
                     <h6 class="text-secondary small mb-2">
@@ -90,7 +86,7 @@
                 </div>
             </div>
 
-            <!-- RECOMMENDATIONS -->
+          
             <div class="col-12">
                 <div class="result-card p-4">
 
@@ -136,10 +132,6 @@
 
 </div>
 
-</div>
-
-<!-- SCRIPT -->
-
 <script>
 function updateFileName() {
     const input = document.getElementById('resumeInput');
@@ -154,28 +146,30 @@ function updateFileName() {
     }
 }
 
-function showLoading() {
+function showLoading(event) {
     const input = document.getElementById('resumeInput');
 
     if (input.files.length > 0) {
         document.getElementById('uploadForm').classList.add('d-none');
         document.getElementById('loading').classList.remove('d-none');
+    } else {
+        if (event) event.preventDefault();
+        alert("Please select a PDF file first.");
     }
 }
 </script>
 
-<!-- STYLE -->
 
 <style>
 
-/* UPLOAD CARD */
+
 .upload-card {
     background: #1e293b;
     border-radius: 18px;
     border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* ICON */
+
 .icon-wrap {
     width: 70px;
     height: 70px;
@@ -191,7 +185,7 @@ function showLoading() {
     color: #38bdf8;
 }
 
-/* DROPZONE */
+
 .upload-box {
     border: 2px dashed rgba(255,255,255,0.1);
     border-radius: 16px;
@@ -207,7 +201,6 @@ function showLoading() {
     background: rgba(56,189,248,0.08);
 }
 
-/* LOADER */
 .loader {
     width: 40px;
     height: 40px;
@@ -221,14 +214,14 @@ function showLoading() {
     100% { transform: rotate(360deg); }
 }
 
-/* RESULT CARD */
+
 .result-card {
     background: #1e293b;
     border-radius: 16px;
     border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* JOB CARD */
+
 .job-card {
     background: rgba(255,255,255,0.03);
     border-radius: 12px;
@@ -239,7 +232,6 @@ function showLoading() {
     background: rgba(56,189,248,0.08);
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
     .upload-card {
         text-align: center;

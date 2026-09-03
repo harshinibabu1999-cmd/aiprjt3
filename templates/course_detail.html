@@ -2,14 +2,13 @@
 
 {% block content %}
 <div class="row fade-in g-0 mt-2">
-    <!-- Sidebar Navigation -->
     <div class="col-md-3 sidebar shadow-lg">
         <div class="px-3 mb-4">
             <h6 class="fw-bold text-secondary mb-3 small tracking-widest text-uppercase">Course Curriculum</h6>
             <div class="progress mb-3" style="height: 6px; background: rgba(255,255,255,0.05);">
                 <div class="progress-bar bg-primary" role="progressbar" style="width: {{ progress_percent }}%"></div>
             </div>
-            <div class="small text-secondary">{{ current_chapter_idx|add:1 }} of {{ total_chapters }} Chapters Complete</div>
+            <div class="small text-secondary">{{ current_chapter_idx }} of {{ total_chapters }} Chapters Complete</div>
         </div>
 
         <div class="chapter-list px-2 overflow-auto">
@@ -28,10 +27,9 @@
         </div>
     </div>
 
-    <!-- Main Content Reader -->
     <div class="col-md-9 pb-5">
         <div class="reader-container">
-            <!-- Header -->
+           
             <div class="d-flex justify-content-between align-items-end mb-5 border-bottom pb-4 border-secondary border-opacity-10">
                 <div>
                     <h5 class="text-primary fw-semibold mb-2">Chapter {{ current_chapter_idx|add:1 }}</h5>
@@ -46,12 +44,10 @@
                 </div>
             </div>
 
-            <!-- Content Body -->
             <div class="content-body fade-in" style="font-size: 1rem; line-height: 1.9; letter-spacing: 0.01em;">
                 {{ chapter.content|linebreaks }}
             </div>
 
-            <!-- Difficulty Selection Modal -->
             <div class="modal fade" id="quizModal" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content glass-panel border-secondary border-opacity-10">

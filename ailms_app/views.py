@@ -119,12 +119,10 @@ def upload_resume(request):
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)
     
-    # Defensive check: if user typed a number in Admin panel instead of a JSON list
     if course.chapters and not isinstance(course.chapters, list):
         course.chapters = None
         course.save()
 
-    # Process PDF if not already done, or if it was cleared by the check above
     if not course.chapters and course.pdf_file:
         try:
             text = extract_text_from_pdf(course.pdf_file.path)
@@ -133,7 +131,6 @@ def course_detail(request, pk):
                 course.chapters = segment_into_chapters(text)
                 course.save()
             else:
-                # Failsafe correctly handled by segment_into_chapters, just save the output
                 course.chapters = segment_into_chapters(text)
                 course.save()
         except Exception as e:
@@ -159,12 +156,11 @@ def course_detail(request, pk):
 def take_quiz(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     difficulty = request.GET.get('difficulty', 'medium').lower()
-    
-    # Check if quiz already exists for this difficulty
+  
     quiz = Quiz.objects.filter(course=course, difficulty=difficulty).first()
     
     if not quiz:
-        # Generate new quiz using AI / content-based engine
+        
         content = course.extracted_content or ""
         if not content:
             messages.error(request, "No content available to generate a quiz. Please ensure the PDF is processed correctly.")

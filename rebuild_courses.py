@@ -496,6 +496,8 @@ def make_pdf(chapters, path):
     doc.close()
 
 
+from ailms_app.ai_utils import generate_quiz
+
 def run():
     print("Purging old data...")
     Result.objects.all().delete()
@@ -541,7 +543,13 @@ def run():
         c.save()
         print(f"  -> Course {c.id}: {len(c.chapters)} chapters indexed.")
 
-    print("\nDone! Please refresh your browser.")
+        for diff in ['easy', 'medium', 'hard']:
+            qs = generate_quiz(full_text, diff)
+            Quiz.objects.create(course=c, difficulty=diff, questions=qs)
+            print(f"     [+] Created {diff.title()} Quiz with {len(qs)} domain-aligned questions.")
+
+    print("\nDone! All courses and domain quizzes rebuilt successfully.")
+
 
 
 if __name__ == '__main__':

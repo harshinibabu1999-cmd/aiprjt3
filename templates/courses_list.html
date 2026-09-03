@@ -2,9 +2,7 @@
 
 {% block content %}
 
-<div class="container">
 
-<!-- HEADER -->
 <div class="d-flex justify-content-between align-items-center flex-wrap mb-5">
     <div>
         <h1 class="fw-bold mb-2">
@@ -23,7 +21,7 @@
     </button>
 </div>
 
-<!-- AI SECTION -->
+
 <div class="collapse mb-5 {% if ai_suggestion %}show{% endif %}" id="aiSearchCollapse">
     <div class="ai-box p-4 rounded-4">
 
@@ -73,7 +71,6 @@
     </div>
 </div>
 
-<!-- COURSES GRID -->
 <div class="row g-4">
 
     {% for course in courses %}
@@ -81,24 +78,22 @@
 
         <div class="course-card h-100 p-4 d-flex flex-column">
 
-            <!-- DOMAIN -->
             <div class="mb-3">
                 <span class="badge domain-badge">
                     {{ course.domain }}
                 </span>
             </div>
 
-            <!-- TITLE -->
+            
             <h5 class="fw-bold mb-2 text-white">
                 {{ course.title }}
             </h5>
 
-            <!-- DESC -->
+            
             <p class="text-secondary small flex-grow-1">
                 {{ course.description|truncatewords:18 }}
             </p>
 
-            <!-- BUTTON -->
             <a href="{% url 'course_detail' course.pk %}"
                class="btn btn-info mt-3 w-100">
                 Start Learning →
@@ -119,24 +114,20 @@
 
 </div>
 
-
-</div>
-
 <style>
 
-/* AI BOX */
 .ai-box {
     background: #1e293b;
     border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* RESULT */
+
 .result-box {
     background: rgba(56,189,248,0.1);
     border-left: 3px solid #38bdf8;
 }
 
-/* COURSE CARD */
+
 .course-card {
     background: #1e293b;
     border-radius: 16px;
@@ -150,7 +141,7 @@
     border-color: rgba(56,189,248,0.4);
 }
 
-/* DOMAIN BADGE */
+
 .domain-badge {
     background: rgba(56,189,248,0.15);
     color: #38bdf8;
@@ -159,7 +150,6 @@
     font-size: 0.75rem;
 }
 
-/* EMPTY STATE */
 .empty-box {
     background: rgba(255,255,255,0.03);
     border: 1px dashed rgba(255,255,255,0.1);

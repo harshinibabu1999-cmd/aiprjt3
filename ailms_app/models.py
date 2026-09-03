@@ -10,6 +10,23 @@ class Course(models.Model):
     chapters = models.JSONField(blank=True, null=True)  # List of {title: "...", content: "..."}
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.pdf_file and (not self.extracted_content or not self.chapters or not isinstance(self.chapters, list)):
+            try:
+                import os
+                from .pdf_utils import extract_text_from_pdf, segment_into_chapters
+                if os.path.exists(self.pdf_file.path):
+                    text = extract_text_from_pdf(self.pdf_file.path)
+                    if text and text.strip():
+                        extracted = text
+                        chaps = segment_into_chapters(text)
+                        Course.objects.filter(pk=self.pk).update(extracted_content=extracted, chapters=chaps)
+                        self.extracted_content = extracted
+                        self.chapters = chaps
+            except Exception as e:
+                print(f"Error extracting PDF text for course '{self.title}': {e}")
+
     def __str__(self):
         return self.title
 

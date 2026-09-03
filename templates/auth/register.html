@@ -2,22 +2,13 @@
 
 {% block content %}
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+<div class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
 
-    <div class="auth-card p-5 shadow-lg" style="width: 400px; border-radius: 15px; background-color: #1e1e2f;">
+    <div class="auth-card p-5 shadow-lg">
 
         <h3 class="fw-bold text-center mb-4 text-white">Create Account</h3>
 
-        <!-- 🔥 SHOW MESSAGES -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-danger text-center">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
 
-        <!-- 🔥 SHOW FORM ERRORS -->
         {% if form.errors %}
             <div class="alert alert-danger">
                 {{ form.errors }}
@@ -62,4 +53,13 @@
 
 </div>
 
+<style>
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    background: #1e293b;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+</style>
 {% endblock %}
